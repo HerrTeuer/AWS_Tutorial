@@ -1,0 +1,43 @@
+Parameters:
+  
+  InstanceType:
+    AllowedValues:
+    - t2.small
+    ConstraintDescription: must be a valid EC2 instance type.
+    Default: t2.small
+    Description: WebServer EC2 instance type
+    Type: String
+
+
+
+Resources: 
+
+  WebServer:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0ec1ba09723e5bfac      
+      InstanceType:
+        Ref: InstanceType
+      SecurityGroups:
+      - Ref: WebServerSecurityGroup
+      UserData:
+        Fn::Base64: !Sub |
+           #!/bin/bash -xe
+           yum update -y aws-cfn-bootstrap
+           /opt/aws/bin/cfn-init -v --stack ${AWS::StackId} --resource WebServer --configsets wordpress_install --region ${AWS::Region}
+           /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackId} --resource WebServer --region ${AWS::Region}
+    DeletionPolicy: Delete
+
+
+  
+  WebServerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Enable HTTP access via port 80 locked down to the load balancer + SSH access"
+      SecurityGroupIngress:
+      - CidrIp: 0.0.0.0/0
+        FromPort: '80'
+        IpProtocol: tcp
+        ToPort: '80'
+    DeletionPolicy: Delete
+
