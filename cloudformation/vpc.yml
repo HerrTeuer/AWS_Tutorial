@@ -1,0 +1,53 @@
+Resources:
+    MyVpc:
+        Type: AWS::EC2::VPC
+        Properties:
+        CidrBlock: 10.1.0.0/16
+        EnableDnsHostnames: true
+        EnableDnsSupport: true
+        InstanceTenancy: default
+        Tags:
+            - Key: name
+              Value: MyVpc
+    InternetGateWay:
+        Type: AWS::EC2::InternetGateway
+        Properties:
+            Tags:
+                - Key: name
+                  Value: test-vpc-igw
+    AttachGateway:
+        Type: AWS::EC2::VPCGatewayAttachment
+        Properties:
+            InternetGatewayId: !Ref InternetGateWay
+            VpcId: !Ref MyVpc
+    FrontEndRouteTable:
+        Type: AWS::EC2::RouteTable
+        Properties:
+            VpcId: !Ref MyVpc
+            Tags:
+                - Key: name
+                  Value: test-frontend-routetable
+
+    FrontEndRoute:
+        Type: AWS::EC2::Route
+        Properties:
+            RouteTableId:
+                Ref: FrontEndRouteTable
+            DestinationCidrBlock: 0.0.0.0/0
+            GatewayId:
+                Ref: InternetGateWay
+    FrontEndSubnet:
+        Type: AWS::EC2::Subnet
+        Properties:
+            AvailabilityZone: cn-northwest-1a
+            CidrBlock: 10.1.16.0/20
+            MapPublicIpOnLaunch: true
+            Tags:
+                - Key: name
+                  Value: test-frontend-subnet
+            VpcId: !Ref MyVpc
+    FrontEndSubnetRouteTableAssociation:
+        Type: AWS::EC2::SubnetRouteTableAssociation
+        Properties:
+            SubnetId: !Ref FrontEndSubnet
+            RouteTableId: !Ref FrontEndRouteTable

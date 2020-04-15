@@ -1,0 +1,10 @@
+SSE-S3: encrytion using kezs handled & managed by AWS S3, AES-256 encrytion type
+SSE-KMS: encrytion using keys handled & managed by KMS, advantages: user control + audit trail
+SSE-C: HTTPS must be used, customer's key is sent together with HTTPS
+
+Client Side Encrytion:
+
+
+force Encrytion:
+1 default S3 Encrytion setting
+2 bucket policy deny object:put without server side encrytion

@@ -1,0 +1,6 @@
+NAT Gateway is resilient within a single-AZ
+
+Must create multiple NAT gateway in multi AZ for fault-tolerance
+
+There is no cross AZ failover needed because if an AZ goes down it doesn't need NAT
+

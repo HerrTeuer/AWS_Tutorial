@@ -1,0 +1,4 @@
+aws s3 ls --region eu-central-1
+
+because awscli default region is america east
+but s3 endpoint is com.amazonaws.eu-central-1.s3

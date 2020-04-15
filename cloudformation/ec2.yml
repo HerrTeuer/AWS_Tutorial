@@ -1,0 +1,135 @@
+#静态变量
+Mappings:
+  StackConfiglucky:
+    EC2:
+      ImageId: ami-076431be05aaf8080
+      
+Resources:
+  MyVpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.1.0.0/16
+      EnableDnsHostnames: true
+      Tags:
+       - Key: name
+         Value: vpclucky
+  TestPublicSubnetlucky:
+    Type: AWS::EC2::Subnet
+    Properties: 
+      AvailabilityZone: eu-central-1a
+      CidrBlock: 10.1.16.0/20
+      MapPublicIpOnLaunch: true
+      Tags:
+       - Key: name
+         Value: Subnetlucky
+      VpcId: !Ref MyVpc
+      
+  luckyInternetGateway:
+      Type: AWS::EC2::InternetGateway
+      Properties:
+        Tags:
+        - Key: name
+          Value: formationtest-igw-lucky
+  luckyAttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:  
+      InternetGatewayId: !Ref luckyInternetGateway
+      VpcId: !Ref MyVpc
+  luckyPublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:  !Ref MyVpc
+      Tags:
+      - Key: name
+        Value: luckypublic-routetable   
+  luckyChangePublicRoute:
+    Type: AWS::EC2::Route
+    Properties:
+        RouteTableId:
+          Ref: luckyPublicRouteTable
+        DestinationCidrBlock: 0.0.0.0/0
+        GatewayId:
+          Ref: luckyInternetGateway  
+  luckyPublicSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref TestPublicSubnetlucky
+      RouteTableId: !Ref luckyPublicRouteTable        
+  luckySecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+        GroupName: sglucky001
+        GroupDescription: sg-test
+        VpcId:
+           Ref: MyVpc
+        SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        Tags:
+        - Key: name
+          Value: sgtestlucky   
+
+  luckyEC2Instance: 
+      Type: AWS::EC2::Instance
+      Properties: 
+        ImageId: !FindInMap [StackConfiglucky,EC2,ImageId]
+        
+        KeyName: EC2 Tutorial
+        BlockDeviceMappings: 
+        - DeviceName:  /dev/xvda
+          Ebs: 
+            VolumeType: "gp2"
+            VolumeSize: "10"
+        - DeviceName: "/dev/sdm"
+          Ebs: 
+            VolumeType: io1
+            Iops: 200
+            DeleteOnTermination: true
+            VolumeSize: 20
+        
+        InstanceInitiatedShutdownBehavior: 'stop'
+        InstanceType: t2.micro
+        Monitoring: false
+        SecurityGroupIds:  
+            - !Ref luckySecurityGroup 
+        #SecurityGroups: 
+          #- !GetAtt luckySecurityGroup.GroupId 
+          #Fn::GetAtt:
+           #- luckySecurityGroup
+           #- GroupId
+        SubnetId: !Ref TestPublicSubnetlucky
+        Tenancy: default
+        UserData: 
+         Fn::Base64: !Sub |  
+           #!/bin/bash
+           yum update -y
+           yum install -y httpd
+           systemctl start httpd.service
+           systemctl enable httpd.service
+           EC2_AVAIL_ZONE=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)
+           echo "<h1>Hello World from $(hostname -f) in AZ $EC2_AVAIL_ZONE </h1>" > /var/www/html/index.html
+        Tags:
+         - Key: name
+           Value: luckyec2  
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        

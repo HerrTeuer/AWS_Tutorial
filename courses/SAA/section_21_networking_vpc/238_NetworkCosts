@@ -1,0 +1,11 @@
+data between 2 AZ in one region
+0.02 dollor/GB using public IP/ Elastic IP
+0.01 dollor/GB using private IP
+
+data between AZs in different region
+0.02 dollor/GB
+
+use private Ip fpr saving and better network performance
+use save AZ for max saving at cost of High Availability
+
+replica in another region cost money for network

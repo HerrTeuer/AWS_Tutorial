@@ -1,0 +1,6 @@
+Private Link (VPC Endpoint Services)
+Expose service in your VPC to other VPC
+
+Network Load Balancer in your vpc 
+to 
+Elastic Network Interface (ENI) in other vpcs
