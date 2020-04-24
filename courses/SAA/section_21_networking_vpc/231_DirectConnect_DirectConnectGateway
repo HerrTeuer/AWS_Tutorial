@@ -1,2 +1,14 @@
 Direct connect
-provides a dedicated private connection from a remote network to your VPC
+provides a dedicated private connection from a remote network (your corporate data center) to your VPC
+need to setup a Virtual Private Gateway on your VPC
+
+
+Direct Connect Gateway
+for Direct Connect to one or more VPC in many diferent regions (same account)
+
+
+Direct Connect -- Encrytion
+not encrypted but private
+but can use following:
+Direct Connect + VPN
+provides an IPsec-encrypted pricate connection

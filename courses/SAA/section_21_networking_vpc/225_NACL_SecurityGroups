@@ -1,0 +1,5 @@
+security groups: stateful
+
+NACL: stateless
+one NACL per Subnet
+100 > 200 >300 >*

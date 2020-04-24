@@ -1,0 +1,1 @@
+allow s3 bucket website to access object in another bucket

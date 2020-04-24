@@ -1,0 +1,9 @@
+1 Site_to_Site VPN connection
+link Virtual Private Gateway and Customer Gateway
+
+
+Virtual Private Gateway
+on the VPC site
+
+Customer Gateway
+on corporate data center site

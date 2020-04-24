@@ -1,0 +1,9 @@
+1 can not ssh to ec2 instance in private subnet
+
+first ssh to ec2 instance in public subnet, then ssh to ec2 instance in private subnet 
+need bastion host or jump box in public subnet as proxy
+
+add default sg (allow all traffic through the sg itself) to ec2 isntances in publich and private subnets
+so that ec2 in a vpc can connect with each other with ping
+
+but why? why my labtop can not directly ssh ec2 in private subnet

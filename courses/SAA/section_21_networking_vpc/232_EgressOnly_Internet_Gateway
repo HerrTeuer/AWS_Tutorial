@@ -1,0 +1,9 @@
+EgressOnly_Internet_Gateway
+only internet gateway for IPv6 only
+similiar as NAT but NAT is for IPv4
+
+IPv6 are all public ip address
+so ipv6 insatnces are puclic accessable
+
+but if add EgressOnly_Internet_Gateway into route table
+then ipv6 insatnce can only send request to internet, external cannot access ipv6 instance
